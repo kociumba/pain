@@ -50,12 +50,12 @@ void main() {
 
 void background_module(Registry &reg, State &ctx) {
     auto [prog, vao, buf] = make_opengl_program();
-    reg.add_render_pass([&prog, &vao]() {
+    reg.add_render_pass([prog, vao]() { // didn't work couse i captured by ref like an idiot
         glUseProgram(prog);
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     });
-    reg.add_cleanup([&prog, &vao, &buf]() {
+    reg.add_cleanup([prog, vao, buf]() {
         glDeleteProgram(prog);
         glDeleteBuffers(1, &buf);
         glDeleteVertexArrays(1, &vao);

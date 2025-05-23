@@ -16,6 +16,7 @@ class GLProgram {
     }
 
     void use() const { glUseProgram(id); }
+    void setUniform(GLuint location, GLuint value) const { glUniform1ui(location, value); }
 
     GLuint get() const { return id; }
 

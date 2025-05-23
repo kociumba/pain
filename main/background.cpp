@@ -98,7 +98,7 @@ void main() {
         if (loc < 0) {
             throw std::runtime_error("uTexture uniform not found");
         }
-        glUniform1i(loc, 0);
+        program->setUniform(loc, 0);
     }
 
     ~BackgroundRenderer() {
@@ -120,7 +120,12 @@ void main() {
 };
 
 void background_module(Registry &reg, State &ctx) {
-    auto renderer = std::make_shared<BackgroundRenderer>();
-    reg.add_render_pass([renderer]() { renderer->render(); });
+    try {
+        auto renderer = std::make_shared<BackgroundRenderer>();
+        reg.add_render_pass([renderer]() { renderer->render(); });
+    } catch (const std::exception &e) {
+        l::error("Failed to create background renderer: {}", e.what());
+        return;
+    }
 }
 REGISTER_MODULE(background_module);

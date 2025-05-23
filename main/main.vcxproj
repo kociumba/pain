@@ -138,15 +138,25 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="simple_window.cpp" />
+    <ClCompile Include="stb\stb_image_impl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
     <ClInclude Include="module_registry.h" />
+    <ClInclude Include="opengl_helpers\buffer.hpp" />
+    <ClInclude Include="opengl_helpers\program.hpp" />
+    <ClInclude Include="opengl_helpers\shader.hpp" />
+    <ClInclude Include="opengl_helpers\shader_manager.hpp" />
+    <ClInclude Include="opengl_helpers\vertex_array.hpp" />
+    <ClInclude Include="stb\stb_image.h" />
     <ClInclude Include="theme.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\background.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

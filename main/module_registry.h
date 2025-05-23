@@ -2,7 +2,10 @@
 
 #include "main.h"
 #include <functional>
+#include <spdlog/spdlog.h>
 #include <vector>
+
+namespace l = spdlog;
 
 struct Registry;
 struct State;
@@ -19,7 +22,11 @@ struct ModuleRegistry {
 
     void initAll(Registry &reg, State &ctx) {
         for (auto &fn : inits)
-            fn(reg, ctx);
+            try {
+                fn(reg, ctx);
+            } catch (const std::exception &e) {
+                l::error("failed to initialize module: {}", e.what());
+            }
     }
 
   private:

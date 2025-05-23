@@ -38,4 +38,5 @@ struct Registry {
 struct State {
     GLFWwindow *w;
     ImVec4 clear_color;
+    Registry registry;
 };

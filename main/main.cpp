@@ -55,6 +55,42 @@ ImGuiIO &initImGui(GLFWwindow *w) {
     return io;
 }
 
+void render_frame(State &ctx) {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ig::NewFrame();
+    for (auto &panel : ctx.registry.ui_panels)
+        panel();
+    ig::Render();
+
+    int display_w, display_h;
+    glfwGetFramebufferSize(ctx.w, &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
+    glClearColor(ctx.clear_color.x * ctx.clear_color.w, ctx.clear_color.y * ctx.clear_color.w,
+                 ctx.clear_color.z * ctx.clear_color.w, ctx.clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    for (auto &pass : ctx.registry.render_passes)
+        pass();
+
+    ImGui_ImplOpenGL3_RenderDrawData(ig::GetDrawData());
+
+    if (ig::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        auto backup_current_context = glfwGetCurrentContext();
+        ig::UpdatePlatformWindows();
+        ig::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
+
+    glfwSwapBuffers(ctx.w);
+}
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) { /* empty callback */ }
+void window_refresh_callback(GLFWwindow *window) {
+    State *ctx = (State *)glfwGetWindowUserPointer(window);
+    if (ctx)
+        render_frame(*ctx);
+}
+
 int main() {
     auto w = initGLFW();
     BOOST_SCOPE_DEFER[&w] {
@@ -81,14 +117,17 @@ int main() {
     };
 
     State ctx{.w = w, .clear_color = ImVec4(0.01f, 0.01f, 0.01f, 1.0f)};
-    Registry registry;
 
-    INIT_ALL_MODULES(registry, ctx);
-    BOOST_SCOPE_DEFER[&registry] {
-        for (auto &fn : registry.cleanups)
+    INIT_ALL_MODULES(ctx.registry, ctx);
+    BOOST_SCOPE_DEFER[&ctx] {
+        for (auto &fn : ctx.registry.cleanups)
             fn();
         l::info("all modules cleaned up");
     };
+
+    glfwSetWindowUserPointer(w, &ctx);
+    glfwSetFramebufferSizeCallback(w, framebuffer_size_callback);
+    glfwSetWindowRefreshCallback(w, window_refresh_callback);
 
     while (!glfwWindowShouldClose(w)) {
         glfwPollEvents();
@@ -96,32 +135,7 @@ int main() {
         if (glfwGetKey(w, GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(w, GLFW_TRUE);
 
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ig::NewFrame();
-        for (auto &panel : registry.ui_panels)
-            panel();
-        ig::Render();
-
-        int display_w, display_h;
-        glfwGetFramebufferSize(w, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(ctx.clear_color.x * ctx.clear_color.w, ctx.clear_color.y * ctx.clear_color.w,
-                     ctx.clear_color.z * ctx.clear_color.w, ctx.clear_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-        for (auto &pass : registry.render_passes)
-            pass();
-
-        ImGui_ImplOpenGL3_RenderDrawData(ig::GetDrawData());
-
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-            auto backup_current_context = glfwGetCurrentContext();
-            ig::UpdatePlatformWindows();
-            ig::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
-        }
-
-        glfwSwapBuffers(w);
+        render_frame(ctx);
     }
     return 0;
 }

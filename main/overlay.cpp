@@ -1,6 +1,10 @@
 #pragma once
 
+#include "graphics.h"
 #include "main.h"
+#include "module_registry.h"
+
+namespace ig = ImGui;
 
 void overlay_module(Registry &reg, State &ctx) {
     reg.add_ui_panel([&ctx]() {

@@ -7,9 +7,6 @@
 
 namespace l = spdlog;
 
-struct Registry;
-struct State;
-
 struct ModuleRegistry {
     using InitFn = std::function<void(Registry &, State &)>;
 

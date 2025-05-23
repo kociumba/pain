@@ -1,6 +1,7 @@
 #pragma once
-#include "../main.h"
-#include <GL/glew.h>
+
+#include "../graphics.h"
+#include "../utils.h"
 #include <memory>
 #include <string>
 

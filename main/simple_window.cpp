@@ -1,6 +1,9 @@
 #pragma once
 
+#include "graphics.h"
 #include "main.h"
+#include "module_registry.h"
+#include "theme.h"
 
 void simple_window_module(Registry &reg, State &ctx) {
     reg.add_ui_panel([&reg, &ctx]() {

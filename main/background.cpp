@@ -4,10 +4,14 @@
 #include "stb/stb_image.h"
 #include "main.h"
 // clang-format on
+#include "graphics.h"
+#include "module_registry.h"
 #include "opengl_helpers/program.hpp"
 #include "opengl_helpers/shader_manager.hpp"
-#include <glm/glm.hpp>
 #include <memory>
+#include <spdlog/spdlog.h>
+
+namespace l = spdlog;
 
 struct Vertex {
     glm::vec3 pos;

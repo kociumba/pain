@@ -1,6 +1,11 @@
 #pragma once
 
 #include "main.h"
+#include "graphics.h"
+#include "module_registry.h"
+#include "theme.h"
+#include <boost/scope/defer.hpp>
+#include <spdlog/spdlog.h>
 
 namespace l = spdlog;
 namespace ig = ImGui;

@@ -1,6 +1,5 @@
 #pragma once
-#include "../main.h"
-#include <GL/glew.h>
+#include "../graphics.h"
 #include <span>
 #include <vector>
 

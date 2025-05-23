@@ -1,23 +1,10 @@
 #pragma once
 
-#define IMGUI_DEFINE_MATH_OPERATORS
-
-#include "module_registry.h"
-// clang-format off
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include "utils.h"
-// clang-format on
-#include "theme.h"
-#include <boost/scope/defer.hpp>
+#include "graphics.h"
 #include <fmt/format.h>
-#include <glm/glm.hpp>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-#include <iostream>
-#include <spdlog/spdlog.h>
+#include <functional>
 #include <stdexcept>
+#include <vector>
 
 using std::vector;
 

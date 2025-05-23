@@ -1,6 +1,6 @@
 #pragma once
 
-#include <imgui.h>
+#include "graphics.h"
 #include <spdlog/spdlog.h>
 
 namespace ig = ImGui;
@@ -86,7 +86,7 @@ inline void k_theme(ImGuiIO &io) {
     style.PopupBorderSize = 1;
     style.FrameBorderSize = 1;
     style.TabBorderSize = 1;
-    style.WindowRounding = 7;
+    style.WindowRounding = 10;
     style.ChildRounding = 4;
     style.FrameRounding = 3;
     style.PopupRounding = 4;

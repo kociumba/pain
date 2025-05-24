@@ -21,6 +21,10 @@ void overlay_module(Registry &reg, State &ctx) {
         ig::Begin("main", NULL, flags);
         ig::PopStyleVar(2);
         ig::Text("%.1f FPS", ImGui::GetIO().Framerate);
+        if (ctx.display_debug) {
+            ig::Spacing();
+            ig::Text(state_to_string(ctx).c_str());
+        };
         ig::End();
     });
 }

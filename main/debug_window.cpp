@@ -5,21 +5,27 @@
 #include "module_registry.h"
 #include "theme.h"
 
-void simple_window_module(Registry &reg, State &ctx) {
+void debug_window_module(Registry &reg, State &ctx) {
     reg.add_ui_panel([&reg, &ctx]() {
-        ig::Begin("gabagool");
-        ig::Text("gabagoolx2");
+        ig::Begin("debug");
         if (ig::Button("Close Window")) {
             glfwSetWindowShouldClose(ctx.w, GLFW_TRUE);
         }
+        ig::Spacing();
         if (ig::Button("Reload theme")) {
             k_theme(ImGui::GetIO());
         }
-        // if (ig::Button("Reload modules")) {
-        //     INIT_ALL_MODULES(reg, ctx);
-        // }
+        ig::Spacing();
+        if (ig::Button("Reload modules")) {
+            ctx.queue_reload = true;
+        }
+        ig::Spacing();
+        if (ig::Button("display debug")) {
+            ctx.display_debug = !ctx.display_debug;
+        }
+        ig::Spacing();
         ig::ColorEdit3("Clear Color", (float *)&ctx.clear_color);
         ig::End();
     });
 }
-REGISTER_MODULE(simple_window_module);
+REGISTER_MODULE(debug_window_module);

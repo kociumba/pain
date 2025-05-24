@@ -159,8 +159,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="background.cpp" />
+    <ClCompile Include="config_manager.cpp" />
     <ClCompile Include="context.cpp" />
     <ClCompile Include="gl.c" />
+    <ClCompile Include="include\toml++\toml_impl.cpp" />
+    <ClCompile Include="konfig\konfig_impl.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="overlay.cpp" />
     <ClCompile Include="debug_window.cpp" />
@@ -168,10 +171,13 @@
     <ClCompile Include="window_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config_manager.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="include\glad\gl.h" />
     <ClInclude Include="include\KHR\khrplatform.h" />
     <ClInclude Include="graphics.h" />
+    <ClInclude Include="include\toml++\toml.hpp" />
+    <ClInclude Include="konfig\konfig.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="module_registry.h" />
     <ClInclude Include="opengl_helpers\buffer.hpp" />

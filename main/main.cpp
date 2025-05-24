@@ -1,8 +1,10 @@
 #pragma once
 
 #include "main.h"
+#include "config_manager.h"
 #include "context.h"
 #include "graphics.h"
+#include "konfig/konfig.h"
 #include "module_registry.h"
 #include "theme.h"
 #include "window_utils.h"
@@ -32,7 +34,7 @@ std::string state_to_string(const State &s) {
     for (auto const &[k, v] : s.key_map) {
         kvs.push_back(fmt::format("{}=>{}", k, v ? "on" : "off"));
     }
-    return fmt::format("State {{\n \tfullscreen: {},\n \tkey_map: [\n\t\t{}\n],\n \tsaved: {{\n "
+    return fmt::format("State {{\n \tfullscreen: {},\n \tkey_map: [\n\t\t{}\n\t],\n \tsaved: {{\n "
                        "\t\tx:{},\n \t\ty:{},\n \t\tw:{},\n \t\th:{}\n \t}}\n }}\n",
                        f, fmt::join(kvs, ",\n\t\t"), s.saved.x, s.saved.y, s.saved.w, s.saved.h);
 };
@@ -161,6 +163,8 @@ int main() {
     ctx->w = w;
     ctx->clear_color = ImVec4(0.01f, 0.01f, 0.01f, 1.0f);
 
+    mngr = std::make_shared<ConfigManager>("config.toml");
+
     INIT_ALL_MODULES(ctx->registry, *ctx);
     BOOST_SCOPE_DEFER[] {
         for (auto &fn : ctx->registry.cleanups)
@@ -187,11 +191,10 @@ int main() {
                 if (!mon) {
                     l::warn("failed to get current monitor");
                 } else {
-                    int mx, my;
-                    glfwGetMonitorPos(mon, &mx, &my);
-                    const GLFWvidmode *mode = glfwGetVideoMode(mon);
-                    glfwSetWindowMonitor(w, nullptr, mx, my, mode->width, mode->height, 0);
+                    int xpos, ypos, width, height;
+                    glfwGetMonitorWorkarea(mon, &xpos, &ypos, &width, &height);
                     glfwSetWindowAttrib(w, GLFW_DECORATED, GLFW_FALSE);
+                    glfwSetWindowMonitor(w, nullptr, xpos, ypos, width, height, 0);
                     ctx->fullscreen = Fullscreen::borderless;
                 }
             } else {
@@ -205,6 +208,7 @@ int main() {
         render_frame();
         ctx->prev_key_map = ctx->key_map;
 
+        // doesn't really work with hot reload but it can still rebuild shaders
         if (ctx->queue_reload) {
             for (auto &fn : ctx->registry.cleanups)
                 fn();
